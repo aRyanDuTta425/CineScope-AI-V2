@@ -1,0 +1,26 @@
+{
+  "name": "mern-movie-dashboard",
+  "version": "1.0.0",
+  "description": "Full-stack MERN application for movie search and dashboard with MongoDB Atlas and Gemini AI",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install"
+  },
+  "keywords": [
+    "mern",
+    "mongodb",
+    "react",
+    "express",
+    "gemini",
+    "movies",
+    "dashboard"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

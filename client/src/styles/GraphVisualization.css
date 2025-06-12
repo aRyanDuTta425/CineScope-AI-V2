@@ -1,0 +1,215 @@
+/* Graph Visualization Styles */
+.graph-visualization {
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.graph-header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.graph-header h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.graph-header p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.graph-container {
+  position: relative;
+  width: 100%;
+  border: 2px solid var(--border-color);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.graph-svg {
+  display: block;
+  background: var(--bg-secondary);
+}
+
+.graph-node {
+  transition: all 0.3s ease;
+}
+
+.graph-node:hover {
+  filter: brightness(1.2);
+}
+
+.graph-link {
+  transition: all 0.3s ease;
+}
+
+.graph-label {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.legend {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 0.5rem;
+  padding: 1rem;
+}
+
+.legend-item {
+  cursor: default;
+}
+
+.legend-item text {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.node-info {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  min-width: 200px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.node-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-primary);
+  font-size: 1.1rem;
+}
+
+.node-info p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.node-info button {
+  background: #ff4757;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.node-info button:hover {
+  background: #ff3742;
+  transform: translateY(-1px);
+}
+
+.graph-controls {
+  margin-top: 1rem;
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border-radius: 0.5rem;
+  border: 1px solid var(--border-color);
+}
+
+.graph-controls p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.graph-controls strong {
+  color: var(--text-primary);
+}
+
+/* Dark theme adjustments */
+.graph-visualization.dark {
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --border-color: #333333;
+}
+
+/* Light theme adjustments */
+.graph-visualization.light {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #2d3748;
+  --text-secondary: #718096;
+  --border-color: #e2e8f0;
+}
+
+/* Animation keyframes */
+@keyframes nodeHover {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1.05); }
+}
+
+@keyframes linkHighlight {
+  0% { stroke-width: 1; }
+  100% { stroke-width: 3; }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .graph-visualization {
+    padding: 1rem;
+  }
+  
+  .graph-container {
+    height: 400px;
+  }
+  
+  .graph-svg {
+    height: 400px;
+  }
+  
+  .node-info {
+    position: static;
+    margin-top: 1rem;
+    width: 100%;
+  }
+  
+  .graph-header h3 {
+    font-size: 1.5rem;
+  }
+  
+  .graph-header p {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .graph-container {
+    height: 300px;
+  }
+  
+  .graph-svg {
+    height: 300px;
+  }
+  
+  .legend {
+    padding: 0.5rem;
+  }
+  
+  .legend-item text {
+    font-size: 10px;
+  }
+}
