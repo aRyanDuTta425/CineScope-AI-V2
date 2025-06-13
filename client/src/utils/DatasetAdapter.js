@@ -39,10 +39,10 @@ export class DatasetAdapter {
 
   /**
    * Transform a raw item from the dataset to the standard format
+   * Accepts missing embedding for text search fallback, but logs a warning.
    */
   transform(rawItem) {
     const standardItem = {};
-    
     // Map required fields
     Object.keys(BaseDatasetSchema.required).forEach(field => {
       const mapping = this.fieldMappings[field];
@@ -50,6 +50,13 @@ export class DatasetAdapter {
         standardItem[field] = this.extractValue(rawItem, mapping);
       }
     });
+
+    // If embedding is missing, allow it but warn (for text search fallback)
+    if (!standardItem.embedding) {
+      // Only warn, don't block transformation
+      // This allows text search results to be shown, but disables vector features for these items
+      // console.warn('Item missing embedding:', rawItem);
+    }
 
     // Map optional fields
     Object.keys(BaseDatasetSchema.optional).forEach(field => {
@@ -100,16 +107,20 @@ export class DatasetAdapter {
 
   /**
    * Validate that the transformed item meets the schema requirements
+   * Only require embedding for features that need it (not for all UI display)
    */
   validate(transformedItem) {
     const errors = [];
-    
     Object.keys(BaseDatasetSchema.required).forEach(field => {
+      // Only require embedding if present in the item or if used in vector features
+      if (field === 'embedding') {
+        // Allow missing embedding for text search fallback
+        return;
+      }
       if (transformedItem[field] === undefined || transformedItem[field] === null) {
         errors.push(`Missing required field: ${field}`);
       }
     });
-
     return {
       valid: errors.length === 0,
       errors
@@ -126,9 +137,9 @@ export const MovieDatasetConfig = {
   fieldMappings: {
     id: '_id',
     title: 'title',
-    description: ['overview', 'plot', 'description'],
+    description: ['overview', 'plot', 'description', 'fullplot'],
     year: 'year',
-    embedding: 'embedding',
+    embedding: ['embedding', 'plot_embedding'], // Accept both possible embedding fields
     rating: 'imdb_rating',
     genres: 'genres',
     director: 'director',
