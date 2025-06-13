@@ -7,8 +7,29 @@
   gap: var(--spacing-xl, 2rem);
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0;
+  padding: var(--spacing-xl, 2rem);
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-2xl);
+  box-shadow: var(--shadow-lg);
+  position: relative;
   animation: fadeIn 0.6s ease forwards;
+  /* Remove overflow hidden to prevent content clipping */
+  min-height: fit-content;
+  grid-auto-rows: auto; /* Allow rows to size based on content */
+  align-items: stretch; /* Ensure all cards stretch to fill available height */
+}
+
+.movies-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent-gradient);
+  opacity: 0.5;
 }
 
 /* Movies Header */
@@ -34,10 +55,11 @@
   backdrop-filter: blur(20px);
   border: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
   border-radius: var(--radius-2xl, 1.5rem);
-  overflow: hidden;
+  overflow: visible; /* Allows content to expand */
   box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  height: 100%;
+  min-height: 600px; /* Increased to accommodate content */
+  height: auto; /* Allow dynamic height based on content */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -92,6 +114,7 @@
   overflow: hidden;
   border-radius: var(--radius-xl, 1rem) var(--radius-xl, 1rem) 0 0;
   background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .movie-poster-container::after {
@@ -196,6 +219,8 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm, 0.5rem);
+  min-height: 250px; /* Increased to accommodate more content */
+  overflow: visible; /* Ensure content is not clipped */
 }
 
 /* Movie Title */
@@ -211,6 +236,7 @@
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  min-height: 2.6rem; /* Ensure consistent height for 2 lines */
 }
 
 .movie-card:hover .movie-title {
@@ -277,13 +303,14 @@
   margin-bottom: var(--spacing-md, 1rem);
   flex: 1;
   
-  /* Truncate to ~3 lines */
+  /* Allow more content to be displayed */
   display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
+  -webkit-line-clamp: 5; /* Increased from 3/4 to 5 lines */
+  line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  max-height: none; /* Remove height restriction */
 }
 
 /* Movie Meta Information */
@@ -315,9 +342,10 @@
 
 /* Movie Actions */
 .movie-actions {
-  margin-top: var(--spacing-lg, 1.5rem);
+  margin-top: auto; /* Push to bottom */
   padding-top: var(--spacing-md, 1rem);
   border-top: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .discover-similar-btn {
@@ -480,6 +508,12 @@
   .movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: var(--spacing-lg, 1.5rem);
+    padding: var(--spacing-lg, 1.5rem);
+  }
+  
+  .movie-card {
+    min-height: 550px; /* Increased for better content display */
+    height: auto; /* Allow dynamic height */
   }
 }
 
@@ -487,11 +521,12 @@
   .movies-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: var(--spacing-md, 1rem);
-    padding: 0 var(--spacing-sm, 0.5rem);
+    padding: var(--spacing-md, 1rem);
   }
   
   .movie-content {
     padding: var(--spacing-md, 1rem);
+    min-height: 220px; /* Increased for mobile */
   }
   
   .movies-header {
@@ -507,6 +542,12 @@
   
   .movie-title {
     font-size: 1.1rem;
+    min-height: 2.2rem;
+  }
+  
+  .movie-card {
+    min-height: 520px; /* Increased for mobile */
+    height: auto; /* Allow dynamic height */
   }
 }
 
@@ -514,6 +555,7 @@
   .movies-grid {
     grid-template-columns: 1fr;
     gap: var(--spacing-md, 1rem);
+    padding: var(--spacing-sm, 0.5rem);
   }
   
   .movie-poster-container {
@@ -522,6 +564,12 @@
   
   .movie-content {
     padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
+    min-height: 200px; /* Increased for small screens */
+  }
+  
+  .movie-card {
+    min-height: 450px; /* Increased for small screens */
+    height: auto; /* Allow dynamic height */
   }
   
   .loading {
@@ -561,6 +609,72 @@
   .genre-tag {
     border-width: 2px;
   }
+}
+
+/* Additional Grid and Layout Fixes */
+
+/* Ensure proper grid container behavior */
+.movies-grid {
+  grid-auto-rows: auto; /* Allow rows to size based on content */
+  align-items: stretch; /* Ensure all cards stretch to fill available height */
+}
+
+/* Ensure movie cards don't get constrained by parent containers */
+.movie-card * {
+  box-sizing: border-box;
+}
+
+/* Fix for any parent containers that might constrain height */
+.main-content,
+.page-content,
+.search-results,
+.dashboard-content {
+  min-height: 100vh;
+  height: auto !important; /* Override any fixed heights */
+  overflow: visible !important; /* Ensure no clipping */
+}
+
+/* Ensure proper flexbox behavior in card content */
+.movie-content > * {
+  flex-shrink: 0; /* Prevent content from shrinking too much */
+}
+
+.movie-content .movie-plot {
+  flex-shrink: 1; /* Allow plot to shrink if needed */
+}
+
+/* Grid item specific fixes */
+.movies-grid > .movie-card {
+  align-self: stretch; /* Ensure cards fill grid cell */
+  justify-self: stretch;
+}
+
+/* Container overflow fixes */
+.app-container,
+.main-container,
+.content-wrapper {
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: auto;
+  min-height: 100vh;
+}
+
+/* Fix any potential parent height constraints */
+.search-page,
+.dashboard-page,
+.home-page {
+  min-height: 100vh;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.search-page .movies-grid,
+.dashboard-page .movies-grid,
+.home-page .movies-grid {
+  flex: 1;
+  height: auto;
+  min-height: fit-content;
 }
 
 

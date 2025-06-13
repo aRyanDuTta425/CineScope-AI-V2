@@ -1,11 +1,25 @@
 /* Explainability Panel Styles */
 .explainability-panel {
-  border-radius: 1rem;
-  border: 2px solid;
-  margin: 1rem 0;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-2xl);
+  margin: var(--spacing-lg, 1rem) 0;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(10px);
   overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.explainability-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent-gradient);
+  opacity: 0.6;
 }
 
 .explainability-panel:hover {

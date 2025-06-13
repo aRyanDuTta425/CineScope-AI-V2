@@ -1,11 +1,25 @@
 /* Smart Filters Styles */
 .smart-filters {
-  border-radius: 1rem;
-  border: 2px solid;
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  border: 2px solid var(--border-primary);
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin: 1rem 0;
-  backdrop-filter: blur(10px);
+  margin: var(--spacing-lg, 1rem) 0;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+}
+
+.smart-filters::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent-gradient);
+  opacity: 0.6;
 }
 
 .smart-filters:hover {
