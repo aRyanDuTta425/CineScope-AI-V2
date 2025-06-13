@@ -1,4 +1,4 @@
-# MERN Movie Dashboard
+# MERN Movie Dashboard- Google Hackathon Project
 
 A full-stack MERN application that allows users to search for movies using natural language queries and visualize movie data through interactive dashboards. The application leverages MongoDB Atlas Vector Search and Google Gemini AI for intelligent movie discovery and insights.
 
