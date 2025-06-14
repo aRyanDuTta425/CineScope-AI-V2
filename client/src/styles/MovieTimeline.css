@@ -276,15 +276,17 @@
 }
 
 .timeline-movies-container {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: none; /* Always show content */
+  overflow: visible; /* Make content visible */
   margin-top: var(--spacing-lg);
   margin-left: calc(16px + var(--spacing-lg)); /* Align with content */
 }
 
-.timeline-period.expanded .timeline-movies-container {
-  max-height: 1000px;
+/* Optional: Add collapse functionality if needed */
+.timeline-period.collapsed .timeline-movies-container {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .timeline-movies {
@@ -299,28 +301,36 @@
 
 .timeline-movie-card {
   background: var(--bg-card);
-  border: 1px solid var(--border-primary);
+  border: 2px solid rgba(59, 130, 246, 0.3) !important;
   border-radius: var(--radius-xl);
-  overflow: hidden;
+  overflow: visible; /* Keep visible */
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   animation: timelineMovieAppear 0.4s ease forwards;
   animation-delay: calc(var(--movie-index, 0) * 50ms);
   opacity: 0;
   transform: translateY(10px) scale(0.95);
+  display: flex;
+  flex-direction: column;
+  min-height: 320px !important; /* Force minimum height */
+  height: auto !important; /* Allow auto height */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); /* Add shadow for better definition */
 }
 
 .timeline-movie-card:hover {
   transform: translateY(-4px) scale(1.02);
   box-shadow: var(--shadow-lg);
-  border-color: var(--border-secondary);
+  border-color: rgba(59, 130, 246, 0.6) !important;
 }
 
 .timeline-movie-poster {
   position: relative;
-  height: 150px;
+  height: 160px !important; /* Fixed height for poster */
   overflow: hidden;
   background: var(--bg-tertiary);
+  flex-shrink: 0; /* Prevent poster from shrinking */
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  z-index: 1; /* Ensure poster doesn't overlap info */
 }
 
 .timeline-movie-poster img {
@@ -360,40 +370,91 @@
 
 .timeline-movie-info {
   padding: var(--spacing-md);
+  flex: 1; /* Allow info section to take remaining space */
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  min-height: 120px; /* Increased minimum height for content */
+  background: rgba(59, 130, 246, 0.2) !important; /* Bright blue background for visibility */
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  position: relative;
+  z-index: 2;
+  border-top: 2px solid rgba(59, 130, 246, 0.5); /* Add top border to separate from poster */
 }
 
 .timeline-movie-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin: 0 0 var(--spacing-xs) 0;
-  line-height: 1.3;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-size: 1.1rem !important; /* Force larger font size */
+  font-weight: 700 !important; /* Force bold */
+  color: rgba(255, 255, 255, 0.95) !important; /* Force white text */
+  margin: 0 0 var(--spacing-sm) 0;
+  line-height: 1.4;
+  display: block !important;
+  white-space: normal;
+  overflow: visible;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Add text shadow for better visibility */
 }
 
 .timeline-movie-year {
-  font-size: 0.8rem;
-  color: var(--text-secondary);
+  font-size: 0.9rem !important; /* Force larger font */
+  color: rgba(255, 255, 255, 0.8) !important; /* Force visible color */
   margin: 0 0 var(--spacing-sm) 0;
+  font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
 }
 
 .timeline-movie-genres {
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-xs);
+  margin-top: auto; /* Push to bottom of card */
 }
 
 .timeline-genre-tag {
-  background: var(--bg-secondary);
-  color: var(--text-tertiary);
-  padding: 2px var(--spacing-xs);
-  border-radius: var(--radius-sm);
-  font-size: 0.7rem;
+  background: rgba(59, 130, 246, 0.2) !important; /* Blue background */
+  color: rgba(255, 255, 255, 0.9) !important; /* White text */
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  font-size: 0.75rem;
+  font-weight: 600 !important; /* Make font bolder */
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  transition: all 0.2s ease;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Add text shadow */
+}
+
+.timeline-genre-tag:hover {
+  background: var(--accent-primary);
+  color: white;
+  border-color: var(--accent-primary);
+}
+
+.timeline-movie-director {
+  font-size: 0.8rem !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+  margin: var(--spacing-xs) 0 0 0;
   font-weight: 500;
-  border: 1px solid var(--border-primary);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  font-style: italic;
+}
+
+.timeline-genre-more {
+  background: rgba(255, 165, 0, 0.3) !important; /* Orange background for "more" indicator */
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(255, 165, 0, 0.5) !important;
+}
+
+/* Force timeline info to be visible */
+.timeline-movie-info * {
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Add stronger contrast border for movie cards */
+.timeline-movie-card {
+  border: 2px solid rgba(59, 130, 246, 0.3) !important;
+}
+
+.timeline-movie-card:hover {
+  border-color: rgba(59, 130, 246, 0.6) !important;
 }
 
 /* Loading States */

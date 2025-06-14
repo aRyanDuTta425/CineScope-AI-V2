@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { useDesignSystem, getThemeStyles } from '../context/DesignSystem';
 import '../styles/MovieTimelineEnhanced.css';
@@ -33,6 +33,13 @@ const MovieTimelineEnhanced = ({ movies = [], onMovieClick }) => {
     .map(d => parseInt(d))
     .filter(d => d > 0)
     .sort((a, b) => b - a);
+
+  // Auto-expand the first decade when movies are loaded
+  useEffect(() => {
+    if (decades.length > 0 && selectedDecade === null) {
+      setSelectedDecade(decades[0]);
+    }
+  }, [decades, selectedDecade]);
 
   const handleDecadeClick = (decade) => {
     setSelectedDecade(selectedDecade === decade ? null : decade);
@@ -92,13 +99,24 @@ const MovieTimelineEnhanced = ({ movies = [], onMovieClick }) => {
                 onClick={() => handleDecadeClick(decade)}
                 style={{
                   backgroundColor: themeColors.primary,
-                  borderColor: themeColors.border
+                  borderColor: themeColors.border,
+                  cursor: 'pointer',
+                  transform: isSelected ? 'scale(1.1)' : 'scale(1)',
+                  boxShadow: isSelected ? '0 8px 25px rgba(59, 130, 246, 0.4)' : '0 4px 15px rgba(0, 0, 0, 0.2)'
                 }}
               >
                 <span className="decade-year">{decade}s</span>
                 <div className="decade-stats">
                   <span className="movie-count">{stats.count} movies</span>
                   <span className="avg-rating">⭐ {stats.avgRating}</span>
+                </div>
+                <div className="click-indicator" style={{
+                  fontSize: '0.8rem',
+                  opacity: 0.7,
+                  marginTop: '4px',
+                  color: 'white'
+                }}>
+                  {isSelected ? '▼ Click to collapse' : '▶ Click to expand'}
                 </div>
               </div>
 

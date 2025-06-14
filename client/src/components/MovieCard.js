@@ -28,10 +28,28 @@ const MovieCard = ({ movie, index = 0, onDiscoverSimilar }) => {
   };
 
   const getPosterImage = () => {
-    if (poster && poster !== 'N/A' && !poster.includes('nopicture')) {
+    if (poster && poster !== 'N/A' && !poster.includes('nopicture') && poster.trim() !== '') {
+      // Handle various poster URL formats
+      if (poster.startsWith('http://') || poster.startsWith('https://')) {
+        return poster;
+      }
+      // If it's a relative path, assume it might need a base URL
       return poster;
     }
     return null;
+  };
+
+  const handleImageError = (e) => {
+    console.warn(`Failed to load poster for ${title}:`, poster);
+    e.target.style.display = 'none';
+    const placeholder = e.target.nextSibling;
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
+  };
+
+  const handleImageLoad = (e) => {
+    e.target.style.opacity = '1';
   };
 
   return (
@@ -45,10 +63,10 @@ const MovieCard = ({ movie, index = 0, onDiscoverSimilar }) => {
             src={getPosterImage()} 
             alt={`${title} poster`}
             className="movie-poster"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
+            style={{ opacity: 0, transition: 'opacity 0.3s ease' }}
+            onError={handleImageError}
+            onLoad={handleImageLoad}
+            loading="lazy"
           />
         ) : null}
         <div 
@@ -96,7 +114,8 @@ const MovieCard = ({ movie, index = 0, onDiscoverSimilar }) => {
           
           {directors.length > 0 && (
             <div className="movie-directors">
-              Director: {directors[0]}
+              <strong>Director:</strong> {directors.slice(0, 2).join(', ')}
+              {directors.length > 2 && ` +${directors.length - 2} more`}
             </div>
           )}
         </div>

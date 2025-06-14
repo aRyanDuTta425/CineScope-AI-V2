@@ -298,11 +298,12 @@ body {
 
 /* Main Content Container */
 .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--spacing-xl, 1.5rem);
+  max-width: 100%; /* Use full available width */
+  margin: 0;
+  padding: var(--spacing-lg, 1rem);
   min-height: 100vh;
   background: transparent;
+  width: 100%;
 }
 
 /* Enhanced Container for Home Page */

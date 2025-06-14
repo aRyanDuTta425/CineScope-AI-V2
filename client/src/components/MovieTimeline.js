@@ -8,6 +8,7 @@ const MovieTimeline = ({ movies = [], loading = false }) => {
 
   useEffect(() => {
     if (movies.length > 0) {
+      console.log('MovieTimeline: Processing movies:', movies.slice(0, 3)); // Debug first 3 movies
       groupMoviesByYear(movies);
     }
   }, [movies]);
@@ -160,7 +161,7 @@ const MovieTimeline = ({ movies = [], loading = false }) => {
           {Object.entries(displayData).map(([period, periodMovies], index) => (
             <div 
               key={period} 
-              className={`timeline-period ${selectedYear === period ? 'expanded' : ''}`}
+              className="timeline-period expanded"
               style={{ '--period-index': index }}
             >
               <div 
@@ -195,7 +196,7 @@ const MovieTimeline = ({ movies = [], loading = false }) => {
                 </div>
                 
                 <div className="timeline-expand-icon">
-                  <span className={selectedYear === period ? 'expanded' : ''}>
+                  <span className="expanded">
                     ↓
                   </span>
                 </div>
@@ -235,18 +236,32 @@ const MovieTimeline = ({ movies = [], loading = false }) => {
                       </div>
                       
                       <div className="timeline-movie-info">
-                        <h4 className="timeline-movie-title">{movie.title}</h4>
+                        <h4 className="timeline-movie-title">
+                          {movie.title || 'Unknown Title'}
+                        </h4>
                         {movie.year && (
-                          <p className="timeline-movie-year">{movie.year}</p>
+                          <p className="timeline-movie-year">
+                            📅 {movie.year}
+                          </p>
                         )}
                         {movie.genres && movie.genres.length > 0 && (
                           <div className="timeline-movie-genres">
-                            {movie.genres.slice(0, 2).map((genre, genreIndex) => (
+                            {movie.genres.slice(0, 3).map((genre, genreIndex) => (
                               <span key={genreIndex} className="timeline-genre-tag">
                                 {genre}
                               </span>
                             ))}
+                            {movie.genres.length > 3 && (
+                              <span className="timeline-genre-tag timeline-genre-more">
+                                +{movie.genres.length - 3}
+                              </span>
+                            )}
                           </div>
+                        )}
+                        {movie.director && (
+                          <p className="timeline-movie-director">
+                            🎬 {movie.director}
+                          </p>
                         )}
                       </div>
                     </div>

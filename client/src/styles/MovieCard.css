@@ -3,11 +3,11 @@
 /* Movies Grid Container */
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: var(--spacing-xl, 2rem);
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: var(--spacing-xl, 2rem);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg, 1.5rem);
+  max-width: 100%; /* Use full available width */
+  margin: 0;
+  padding: var(--spacing-lg, 1.5rem);
   background: var(--bg-card);
   backdrop-filter: blur(20px);
   border: 1px solid var(--border-primary);
@@ -15,10 +15,13 @@
   box-shadow: var(--shadow-lg);
   position: relative;
   animation: fadeIn 0.6s ease forwards;
-  /* Remove overflow hidden to prevent content clipping */
+  overflow: visible; /* Prevent content clipping */
   min-height: fit-content;
-  grid-auto-rows: auto; /* Allow rows to size based on content */
-  align-items: stretch; /* Ensure all cards stretch to fill available height */
+  grid-auto-rows: minmax(800px, auto); /* Set minimum row height to prevent overlap */
+  align-items: start; /* Changed from stretch to start to prevent stretching issues */
+  justify-content: stretch; /* Stretch items to fill available space */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .movies-grid::before {
@@ -32,14 +35,24 @@
   opacity: 0.5;
 }
 
+/* Movies Grid Wrapper */
+.slide-up {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 /* Movies Header */
 .movies-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-xl, 2rem);
+  margin-bottom: var(--spacing-md, 1rem);
   gap: var(--spacing-lg, 1.5rem);
   flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
 }
 
 .movies-count {
@@ -47,6 +60,7 @@
   font-size: 1.1rem;
   font-weight: 600;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 0 var(--spacing-lg, 1.5rem);
 }
 
 /* Individual Movie Card */
@@ -58,8 +72,10 @@
   overflow: visible; /* Allows content to expand */
   box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  min-height: 600px; /* Increased to accommodate content */
+  min-height: 900px; /* Increased to accommodate longer plot text */
   height: auto; /* Allow dynamic height based on content */
+  width: 100%; /* Ensure full width within grid cell */
+  max-width: 100%; /* Prevent overflow */
   display: flex;
   flex-direction: column;
   position: relative;
@@ -67,6 +83,9 @@
   animation-delay: calc(var(--card-index, 0) * 50ms);
   transform: translateY(20px);
   opacity: 0;
+  margin: 0; /* Remove any margins that could cause overlap */
+  z-index: 1; /* Ensure proper stacking */
+  box-sizing: border-box;
 }
 
 .movie-card::before {
@@ -82,13 +101,15 @@
 
 /* Hover Effects */
 .movie-card:hover {
-  transform: translateY(-12px) scale(1.03);
+  transform: translateY(-8px) scale(1.02); /* Reduced scale and movement to prevent overlap */
   box-shadow: 
     var(--shadow-xl, 0 20px 25px -5px rgba(0, 0, 0, 0.1)),
     0 0 0 1px var(--border-secondary, rgba(255, 255, 255, 0.2)),
     0 0 30px rgba(59, 130, 246, 0.15);
   border-color: var(--border-secondary, rgba(255, 255, 255, 0.2));
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 10; /* Ensure hovered card appears above others */
+  will-change: transform; /* Optimize for transforms */
 }
 
 .movie-card:hover::before {
@@ -110,11 +131,16 @@
 /* Poster Container */
 .movie-poster-container {
   position: relative;
-  height: 300px;
+  height: 450px; /* Significantly increased to match movie poster aspect ratio */
   overflow: hidden;
   border-radius: var(--radius-xl, 1rem) var(--radius-xl, 1rem) 0 0;
-  background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  background: linear-gradient(135deg, var(--bg-secondary, rgba(255, 255, 255, 0.05)), var(--bg-tertiary, rgba(255, 255, 255, 0.02))); /* Better gradient background */
   flex-shrink: 0; /* Prevent shrinking */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 450px;
+  max-height: 450px;
 }
 
 .movie-poster-container::after {
@@ -143,30 +169,57 @@
 .movie-poster {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Use cover to fill container completely and avoid grey areas */
+  object-position: center center; /* Center the image both horizontally and vertically */
   transition: transform var(--transition-slow, 0.5s ease);
   background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  border-radius: var(--radius-xl, 1rem) var(--radius-xl, 1rem) 0 0;
+  display: block; /* Ensure proper display */
+  min-height: 100%;
+  min-width: 100%;
 }
 
-.movie-card:hover .movie-poster {
-  transform: scale(1.05);
+.movie-poster[style*="opacity: 0"] {
+  background: linear-gradient(45deg, #f0f0f0 25%, transparent 25%), 
+              linear-gradient(-45deg, #f0f0f0 25%, transparent 25%), 
+              linear-gradient(45deg, transparent 75%, #f0f0f0 75%), 
+              linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+  animation: loading-shimmer 1.5s ease-in-out infinite;
 }
 
-/* Poster Placeholder */
+@keyframes loading-shimmer {
+  0% { background-position: 0 0, 0 10px, 10px -10px, -10px 0px; }
+  100% { background-position: 20px 20px, 20px 30px, 30px 10px, 10px 20px; }
+}
+
+/* Improved placeholder styling */
 .movie-poster-placeholder {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
+  font-size: 3rem;
   color: var(--text-muted, rgba(255, 255, 255, 0.4));
-  background: var(--bg-secondary, rgba(255, 255, 255, 0.05));
+  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
   border: 2px dashed var(--border-primary, rgba(255, 255, 255, 0.1));
   border-radius: var(--radius-lg, 0.75rem);
   margin: var(--spacing-md, 1rem);
   height: calc(100% - 2rem);
   transition: all var(--transition-normal, 0.3s ease);
+  position: relative;
+}
+
+.movie-poster-placeholder::before {
+  content: 'No Image';
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  opacity: 0.7;
 }
 
 .movie-card:hover .movie-poster-placeholder {
@@ -219,7 +272,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--spacing-sm, 0.5rem);
-  min-height: 250px; /* Increased to accommodate more content */
+  min-height: 400px; /* Increased to accommodate longer plot text */
   overflow: visible; /* Ensure content is not clipped */
 }
 
@@ -303,41 +356,40 @@
   margin-bottom: var(--spacing-md, 1rem);
   flex: 1;
   
-  /* Allow more content to be displayed */
-  display: -webkit-box;
-  -webkit-line-clamp: 5; /* Increased from 3/4 to 5 lines */
-  line-clamp: 5;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-height: none; /* Remove height restriction */
+  /* Allow full plot to be displayed without truncation */
+  display: block;
+  overflow: visible;
+  text-overflow: initial;
+  max-height: none;
 }
 
 /* Movie Meta Information */
 .movie-meta {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs, 0.25rem);
+  gap: var(--spacing-sm, 0.5rem); /* Increased gap for better spacing */
   margin-top: auto;
   padding-top: var(--spacing-md, 1rem);
   border-top: 1px solid var(--border-primary, rgba(255, 255, 255, 0.1));
+  min-height: 60px; /* Ensure space for director info */
 }
 
 .movie-runtime,
 .movie-directors {
-  font-size: 0.85rem;
-  color: var(--text-tertiary, rgba(255, 255, 255, 0.6));
+  font-size: 0.9rem; /* Slightly increased font size */
+  color: var(--text-tertiary, rgba(255, 255, 255, 0.7)); /* Improved contrast */
   display: flex;
   align-items: center;
   gap: var(--spacing-xs, 0.25rem);
+  padding: var(--spacing-xs, 0.25rem) 0; /* Added padding for better spacing */
+  word-wrap: break-word; /* Ensure text wraps properly */
 }
 
 .movie-directors {
-  display: -webkit-box;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: block; /* Changed from flex to block for better text wrapping */
+  line-height: 1.4; /* Improved line height */
+  white-space: normal; /* Allow text to wrap */
+  overflow: visible; /* Show all text */
 }
 
 /* Movie Actions */
@@ -506,27 +558,37 @@
 /* Responsive Design */
 @media (max-width: 1200px) {
   .movies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: var(--spacing-lg, 1.5rem);
-    padding: var(--spacing-lg, 1.5rem);
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--spacing-md, 1rem);
+    padding: var(--spacing-md, 1rem);
+    grid-auto-rows: minmax(750px, auto); /* Adjusted for responsive */
+    max-width: 100%;
+    margin: 0;
   }
   
   .movie-card {
-    min-height: 550px; /* Increased for better content display */
+    min-height: 850px; /* Increased for better content display */
     height: auto; /* Allow dynamic height */
+  }
+
+  .movie-poster-container {
+    height: 400px; /* Increased poster height for large screens */
   }
 }
 
 @media (max-width: 768px) {
   .movies-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: var(--spacing-md, 1rem);
-    padding: var(--spacing-md, 1rem);
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: var(--spacing-sm, 0.75rem);
+    padding: var(--spacing-sm, 0.75rem);
+    grid-auto-rows: minmax(680px, auto); /* Adjusted for mobile */
+    max-width: 100%;
+    margin: 0;
   }
   
   .movie-content {
     padding: var(--spacing-md, 1rem);
-    min-height: 220px; /* Increased for mobile */
+    min-height: 280px; /* Increased for mobile */
   }
   
   .movies-header {
@@ -537,7 +599,7 @@
   }
   
   .movie-poster-container {
-    height: 250px;
+    height: 350px; /* Increased for mobile */
   }
   
   .movie-title {
@@ -546,7 +608,7 @@
   }
   
   .movie-card {
-    min-height: 520px; /* Increased for mobile */
+    min-height: 780px; /* Increased for mobile to accommodate longer plot text */
     height: auto; /* Allow dynamic height */
   }
 }
@@ -554,21 +616,24 @@
 @media (max-width: 480px) {
   .movies-grid {
     grid-template-columns: 1fr;
-    gap: var(--spacing-md, 1rem);
+    gap: var(--spacing-sm, 0.75rem);
     padding: var(--spacing-sm, 0.5rem);
+    grid-auto-rows: minmax(580px, auto); /* Adjusted for small screens */
+    max-width: 100%;
+    margin: 0;
   }
   
   .movie-poster-container {
-    height: 200px;
+    height: 300px; /* Increased for small screens */
   }
   
   .movie-content {
     padding: var(--spacing-sm, 0.5rem) var(--spacing-md, 1rem);
-    min-height: 200px; /* Increased for small screens */
+    min-height: 300px; /* Increased for small screens to accommodate plot text */
   }
   
   .movie-card {
-    min-height: 450px; /* Increased for small screens */
+    min-height: 680px; /* Increased for small screens to accommodate longer plot text */
     height: auto; /* Allow dynamic height */
   }
   
@@ -613,10 +678,11 @@
 
 /* Additional Grid and Layout Fixes */
 
-/* Ensure proper grid container behavior */
-.movies-grid {
-  grid-auto-rows: auto; /* Allow rows to size based on content */
-  align-items: stretch; /* Ensure all cards stretch to fill available height */
+/* Grid item specific fixes */
+.movies-grid > .movie-card {
+  align-self: stretch; /* Ensure cards fill grid cell */
+  justify-self: stretch;
+  position: relative; /* Ensure proper positioning */
 }
 
 /* Ensure movie cards don't get constrained by parent containers */
@@ -675,6 +741,29 @@
   flex: 1;
   height: auto;
   min-height: fit-content;
+}
+
+/* Additional poster fixes to prevent grey areas */
+.movie-poster-container {
+  min-height: 450px;
+  max-height: 450px;
+}
+
+/* Ensure no gaps in the poster container */
+.movie-poster-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Additional spacing and layout improvements */
+.movies-grid {
+  overflow-x: hidden;
+  overflow-y: visible;
+}
+
+/* Ensure consistent spacing between cards */
+.movie-card {
+  box-sizing: border-box;
 }
 
 
