@@ -59,15 +59,25 @@ export const GenreDistributionChart = ({ movies = [] }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 10,
+        bottom: 10,
+        left: 5,
+        right: 5
+      }
+    },
     plugins: {
       legend: {
         position: 'bottom',
         labels: {
           color: themeColors.text,
-          font: { size: 12, weight: '500' },
-          padding: 20,
+          font: { size: 11, weight: '500' },
+          padding: 10,
           usePointStyle: true,
-          pointStyle: 'circle'
+          pointStyle: 'circle',
+          boxWidth: 10,
+          boxHeight: 10
         }
       },
       tooltip: {
@@ -144,6 +154,14 @@ export const TopTalentChart = ({ movies = [], type = 'directors' }) => {
     responsive: true,
     maintainAspectRatio: false,
     indexAxis: 'y',
+    layout: {
+      padding: {
+        top: 5,
+        bottom: 5,
+        left: 5,
+        right: 10
+      }
+    },
     plugins: {
       legend: {
         display: false
@@ -273,6 +291,14 @@ export const YearGenreHeatmap = ({ movies = [] }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    layout: {
+      padding: {
+        top: 10,
+        bottom: 10,
+        left: 10,
+        right: 10
+      }
+    },
     plugins: {
       legend: {
         display: false

@@ -135,12 +135,14 @@
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-2xl);
   padding: var(--spacing-2xl, 2rem);
-  margin: var(--spacing-lg, 1rem);
-  min-height: calc(100vh - 4rem);
+  margin: var(--spacing-md, 0.75rem); /* Reduced from 1rem to 0.75rem */
+  min-height: calc(100vh - 3rem); /* Adjusted to match reduced margin */
   animation: fadeInUp 0.6s ease-out;
   box-shadow: var(--shadow-lg);
   position: relative;
-  overflow: hidden;
+  overflow: auto;
+  width: calc(100% - 1.5rem); /* Ensure proper width calculation */
+  box-sizing: border-box;
 }
 
 .section::before {
@@ -226,12 +228,25 @@
   background: linear-gradient(135deg, 
     rgba(245, 158, 11, 0.02) 0%, 
     rgba(239, 68, 68, 0.02) 100%);
+  overflow: hidden;
+}
+
+.analytics-section .section-content {
+  width: 100%;
+  padding: 0;
+}
+
+.analytics-section .charts-grid {
+  margin-top: 1rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
 }
 
 .chart-container {
@@ -243,6 +258,12 @@
   box-shadow: var(--shadow-md);
   position: relative;
   overflow: hidden;
+  min-height: 450px;
+  height: auto;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .chart-container::before {
@@ -256,9 +277,37 @@
   opacity: 0.5;
 }
 
+.chart-container canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Ensure charts render properly within containers */
+.charts-grid .chart-container {
+  overflow: hidden !important;
+  contain: layout;
+}
+
+.chart-container .chart-wrapper {
+  overflow: hidden;
+  contain: layout;
+}
+
+/* Fix Chart.js responsive sizing issues */
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain;
+}
+
 .chart-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-primary);
+  flex-shrink: 0;
 }
 
 .chart-title {
@@ -275,6 +324,11 @@
 
 .chart-wrapper {
   position: relative;
+  width: 100%;
+  height: 350px;
+  min-height: 300px;
+  flex: 1;
+  overflow: hidden;
 }
 
 /* Explainability Section */
@@ -417,6 +471,59 @@
   .view-btn {
     padding: 0.5rem 1rem;
     font-size: 0.8rem;
+  }
+}
+
+/* Responsive Design for Charts */
+@media (max-width: 1200px) {
+  .charts-grid {
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .chart-container {
+    min-height: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .chart-container {
+    padding: 1rem;
+    min-height: 350px;
+  }
+  
+  .chart-wrapper {
+    height: 280px;
+    min-height: 250px;
+  }
+  
+  .chart-title {
+    font-size: 1.1rem;
+  }
+  
+  .chart-subtitle {
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .charts-grid {
+    gap: 0.5rem;
+  }
+  
+  .chart-container {
+    padding: 0.75rem;
+    min-height: 300px;
+  }
+  
+  .chart-wrapper {
+    height: 230px;
+    min-height: 200px;
   }
 }
 
